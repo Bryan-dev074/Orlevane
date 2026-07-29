@@ -26,7 +26,7 @@ const PLACES: Array<{
     city: { es: 'Asunción, Paraguay', pt: 'Assunção, Paraguai' },
     address: 'Av. San Martín 1234, esq. Malutín',
     hours: { es: 'Lun a sáb · 10:00 – 20:00', pt: 'Seg a sáb · 10:00 – 20:00' },
-    img: '/media/e/boutique-calle.webp',
+    img: '/media/c/boutique-villa-morra.webp',
     map: 'https://www.google.com/maps/search/?api=1&query=Av.+San+Mart%C3%ADn+Villa+Morra+Asunci%C3%B3n',
   },
   {
@@ -36,7 +36,7 @@ const PLACES: Array<{
     city: { es: 'Alto Paraná, Paraguay', pt: 'Alto Paraná, Paraguai' },
     address: 'Av. Monseñor Rodríguez 880, Centro',
     hours: { es: 'Lun a sáb · 09:00 – 19:00', pt: 'Seg a sáb · 09:00 – 19:00' },
-    img: '/media/e/campana-salon.webp',
+    img: '/media/c/boutique-cde.webp',
     map: 'https://www.google.com/maps/search/?api=1&query=Av.+Monse%C3%B1or+Rodr%C3%ADguez+Ciudad+del+Este',
   },
   {
@@ -46,7 +46,7 @@ const PLACES: Array<{
     city: { es: 'Asunción, Paraguay', pt: 'Assunção, Paraguai' },
     address: 'Palma 615, casi 15 de Agosto',
     hours: { es: 'Con cita · Mar a vie · 14:00 – 18:00', pt: 'Com hora marcada · Ter a sex · 14:00 – 18:00' },
-    img: '/media/e/atelier-mesa.webp',
+    img: '/media/c/boutique-taller.webp',
     map: 'https://www.google.com/maps/search/?api=1&query=Palma+615+Asunci%C3%B3n',
   },
 ];

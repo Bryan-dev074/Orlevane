@@ -1,6 +1,9 @@
 // Generado por scripts/fetch-assets.mjs — no editar a mano.
 
 export const BLUR: Record<string, string> = {
+  "/media/c/boutique-cde.webp": "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAABQBACdASoUABsAPvlqsE+qpiUiMAwBUB8JQBadAxpJRpTNGYIl/HUrYW4AAP7p5+x2byYLi2P9YjPF1Y0G5IAM8/AUizO8EuHiwWF+04yybrt1vUj81GzynEjzayTka16pcBNYtBCgAA==",
+  "/media/c/boutique-taller.webp": "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAACQBQCdASoUABsAPwlysVKrpqSisBgIAXAhCUAY5N5ANUAO9mXNnDTS37+UcLSw8N/u1NK7AAD+8LrZvTyeJZ4Ip+auHKXnGb2xyXbl5FEgYnSbo07znNGjxGEhRfgv7c0ik2ZIAAA=",
+  "/media/c/boutique-villa-morra.webp": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAADwBACdASoUABsAPwlurk+rpqQiMBgMAXAhCUATpmX4NUDnJ1G4LM+guP2iPq0SLAAA9o1W02bXjeZCbiDufFeUPhicAKS1u63QsqhS/slxWTHfnX/WArCWFjJJeMWPsl6/FcZrbsjWy/jvsAA=",
   "/media/c/mundo-accesorios.webp": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAACwBQCdASoUABsAPwlsrVArpaQisAgBcCEJZgDI0UE5oAwkTXUbnYcu3TFkywb9CUp7z5lhcAAA/u/CmrLdj53tlxyKEry/cEODvNWho1jQg2lYkTFNHLEqfN28j9QCklaaOl/VwIPvK8onRbyETcmCJIAAAA==",
   "/media/c/mundo-hombre.webp": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAACwBACdASoUABsAPwl4slOrpyQiqAqpcCEJZQAAj/WQG7TzpRGctt9t4xcpGjMAAP6uGfi/yHn5/0btsMqJalcT5uXAcbDNmS8Z/yZ5lWt9+OpGsyVL4wYzJyVuAA==",
   "/media/c/mundo-mujer.webp": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQBACdASoUABsAPv1sq0+rJiQiMAwBYB+JYwC7AB4+AVTm7rzQOQoXb/+AAOJ0CVwLqUR3R+pk4Z0mkiwLeNlpmvyTDDVk4WiCSbTmKoRy5Jiiw5V7Ec0l8QGO7TgJ+zmtqAAA",
@@ -93,7 +96,7 @@ export const BLUR: Record<string, string> = {
   "/media/p/vesper-2.webp": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAABQBACdASoUABkAPwlwrU+rpqQiMAgBcCEJZwDM0Bu1FludHht8uzqa+jwAAP7nyj0N2aYz0lz1MR8rEXkJzi9YVdugNJxvdnIbv7p3LkAAAA==",
   "/media/p/vinci-1.webp": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQBACdASoUABkAPwl0sFCrpySisAgBcCEJZwDLaCHheVYcuhN0NE1mtn7nvOkgAAD+y4RWbAOwa3MBoWHgsCYPJWkpMCeKqQHe2AgDasJDZzwAAAA=",
   "/media/p/vinci-2.webp": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAABwBACdASoUABkAPwl0sE+rpySiMAgBcCEJQBbboAAONrijojf0UHAC0jCpgAD+DPkdLaY4/HGauWeXLNPt7v7LZ6XMqY/sjUPMeWDgBn34b7ubj9N3eb/SZvfNHfT6e26iCtkZchQ2oMmAAAA=",
-  "/media/w/particula.webp": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQBACdASoUABkAPwlysVArpqSiqA1RcCEJZQDE2EXfTyoGI0VO072Q93jFGxNLgAD+93tURefXurBJ0AnvRUElVjARZ31tjkYBDQ3Zhu3qpqPmGhg8EDAA",
+  "/media/w/particula.webp": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAACwBACdASoUABkAPwVusE+rpqSiMBgMAXAgiWIAzuwQ78n2LGpjja5EgSLOQN/IAP7udnVc/DZibYoDeiySaUJCmO830gLlogJ4YH3RrfBfqgAA",
 };
 
 export const blurFor = (src: string): string | undefined => BLUR[src];

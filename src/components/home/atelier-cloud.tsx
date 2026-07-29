@@ -12,13 +12,24 @@ import Img from '@/components/ui/img';
  *
  * Técnica en la línea de img2threejs, escrita a mano para poder controlar la
  * paleta, el coste y la degradación.
+ *
+ * Sobre la robustez, que acá es lo difícil:
+ *  · El contexto WebGL se libera con forceContextLoss(); sólo con dispose() el
+ *    navegador lo sigue contando, y al cabo de una docena de montajes deja de
+ *    entregar contextos nuevos y la pieza no aparece más.
+ *  · La fotografía de respaldo no se oculta hasta que se pintó un cuadro de
+ *    verdad, y vuelve si el contexto se pierde. Ocultarla antes deja un hueco
+ *    negro cuando algo falla.
+ *  · El avance se lee del rectángulo en cada cuadro, no de eventos de scroll:
+ *    con desplazamiento suave, anclas o restauración de posición, los eventos
+ *    se pierden y la nube se queda a medio armar.
  */
 
 const SRC = '/media/w/particula.webp';
 
 export default function AtelierCloud({ className = '' }: { className?: string }) {
   const host = useRef<HTMLDivElement>(null);
-  const [ready, setReady] = useState(false);
+  const [painted, setPainted] = useState(false);
   const [failed, setFailed] = useState(false);
   const reduced = useReducedMotion();
 
@@ -35,7 +46,7 @@ export default function AtelierCloud({ className = '' }: { className?: string })
       (entries) => {
         if (!entries[0]?.isIntersecting) return;
         io.disconnect();
-        start();
+        void start();
       },
       { rootMargin: '300px' },
     );
@@ -43,7 +54,10 @@ export default function AtelierCloud({ className = '' }: { className?: string })
 
     async function start() {
       const el = host.current;
-      if (!el) return;
+      if (!el || disposed) return;
+
+      let renderer: import('three').WebGLRenderer | undefined;
+
       try {
         const THREE = await import('three');
         if (disposed) return;
@@ -76,8 +90,11 @@ export default function AtelierCloud({ className = '' }: { className?: string })
 
         const planeW = 1.9;
         const planeH = (ch / cw) * planeW;
-        // El fondo del negativo se descarta: sólo interesa el par y la luz que le pega.
-        const FLOOR = 0.11;
+        // El fondo del negativo se descarta: sólo interesa el par y la luz que le
+        // pega. El corte no es seco —los puntos del borde entran con menos alfa—
+        // porque un umbral duro recorta la pieza contra un rectángulo visible.
+        const FLOOR = 0.13;
+        const FADE = 0.1;
 
         for (let y = 0; y < rows; y++) {
           for (let x = 0; x < cols; x++) {
@@ -97,7 +114,8 @@ export default function AtelierCloud({ className = '' }: { className?: string })
             // Marfil en las luces, dorado en los medios. El brillo del punto lleva
             // la luminancia del píxel, así que el volumen del zapato se lee solo.
             const warm = Math.pow(Math.min(1, (lum - FLOOR) / (1 - FLOOR)), 0.68);
-            colors.push(0.24 + warm * 0.72, 0.2 + warm * 0.68, 0.15 + warm * 0.55);
+            const edge = Math.min(1, (lum - FLOOR) / FADE);
+            colors.push((0.32 + warm * 0.76) * edge, (0.26 + warm * 0.7) * edge, (0.18 + warm * 0.56) * edge);
             seeds.push(Math.random());
           }
         }
@@ -116,7 +134,6 @@ export default function AtelierCloud({ className = '' }: { className?: string })
             uProgress: { value: 0 },
             uTime: { value: 0 },
             uSize: { value: 1 },
-            uPointer: { value: new THREE.Vector2(0, 0) },
           },
           vertexShader: /* glsl */ `
             attribute vec3 aStart;
@@ -162,22 +179,35 @@ export default function AtelierCloud({ className = '' }: { className?: string })
         const camera = new THREE.PerspectiveCamera(42, 1, 0.1, 20);
         camera.position.set(0, 0, 2.35);
 
-        const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'low-power' });
+        renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'low-power' });
         renderer.setClearColor(0x000000, 0);
-        el.appendChild(renderer.domElement);
-        renderer.domElement.style.width = '100%';
-        renderer.domElement.style.height = '100%';
-        renderer.domElement.style.display = 'block';
+
+        const canvas = renderer.domElement;
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.display = 'block';
+
+        // Si el efecto se desmontó mientras compilábamos, no se cuelga nada del DOM.
+        if (disposed) throw new Error('desmontado');
+        el.appendChild(canvas);
+
+        const onContextLost = (e: Event) => {
+          e.preventDefault();
+          setPainted(false);
+          setFailed(true);
+        };
+        canvas.addEventListener('webglcontextlost', onContextLost);
 
         const resize = () => {
           const r = el.getBoundingClientRect();
           const w = Math.max(1, r.width);
           const h = Math.max(1, r.height);
-          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-          renderer.setSize(w, h, false);
+          const dpr = Math.min(window.devicePixelRatio, 2);
+          renderer!.setPixelRatio(dpr);
+          renderer!.setSize(w, h, false);
           camera.aspect = w / h;
           camera.updateProjectionMatrix();
-          mat.uniforms.uSize.value = Math.max(2, (h / 420) * 3.6) * Math.min(window.devicePixelRatio, 2);
+          mat.uniforms.uSize.value = Math.max(2.2, (h / 420) * 4.1) * dpr;
         };
         resize();
         const ro = new ResizeObserver(resize);
@@ -191,49 +221,67 @@ export default function AtelierCloud({ className = '' }: { className?: string })
         };
         el.addEventListener('pointermove', onPointer);
 
-        let progress = 0;
-        const onScroll = () => {
-          const r = el.getBoundingClientRect();
-          const vh = window.innerHeight;
-          // 0 cuando la sección entra por abajo, 1 cuando queda centrada.
-          progress = 1 - Math.min(1, Math.max(0, (r.top - vh * 0.1) / (vh * 0.75)));
-        };
-        onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
-
-        setReady(true);
+        let visible = true;
+        const vis = new IntersectionObserver((e) => (visible = e[0]?.isIntersecting ?? true), { rootMargin: '160px' });
+        vis.observe(el);
 
         const clock = new THREE.Clock();
         let raf = 0;
-        let visible = true;
-        const vis = new IntersectionObserver((e) => (visible = e[0]?.isIntersecting ?? true), { rootMargin: '120px' });
-        vis.observe(el);
+        let firstFrame = true;
+        let settled = 0;
 
         const tick = () => {
           raf = requestAnimationFrame(tick);
           if (!visible || document.hidden) return;
-          const t = clock.getElapsedTime();
-          mat.uniforms.uTime.value = t;
-          mat.uniforms.uProgress.value += (progress - mat.uniforms.uProgress.value) * 0.055;
+
+          // Avance por fracción visible del bloque, leída del rectángulo en cada
+          // cuadro. Queda armada del todo con dos tercios del bloque en pantalla,
+          // que es la posición de lectura, y no se vuelve a desarmar: si no, al
+          // detenerse a leer la sección la nube se queda a medio hacer y parece
+          // rota, que es justo lo que no queremos.
+          const r = el.getBoundingClientRect();
+          const vh = window.innerHeight || 1;
+          const shown = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+          const frac = shown / Math.max(1, Math.min(r.height, vh));
+          const progress = Math.min(1, Math.max(0, frac * 1.6));
+
+          const u = mat.uniforms;
+          if (progress > settled) settled = progress;
+          u.uTime.value = clock.getElapsedTime();
+          u.uProgress.value += (settled - u.uProgress.value) * 0.055;
           points.rotation.y += (pointer.x * 0.22 - points.rotation.y) * 0.04;
           points.rotation.x += (-pointer.y * 0.14 - points.rotation.x) * 0.04;
-          renderer.render(scene, camera);
+          renderer!.render(scene, camera);
+
+          if (firstFrame) {
+            firstFrame = false;
+            setPainted(true);
+          }
         };
-        tick();
 
         cleanup = () => {
           cancelAnimationFrame(raf);
           ro.disconnect();
           vis.disconnect();
-          window.removeEventListener('scroll', onScroll);
           el.removeEventListener('pointermove', onPointer);
+          canvas.removeEventListener('webglcontextlost', onContextLost);
           geo.dispose();
           mat.dispose();
-          renderer.dispose();
-          renderer.domElement.remove();
+          // El orden importa: primero se suelta el contexto, después el renderer.
+          renderer!.forceContextLoss();
+          renderer!.dispose();
+          canvas.remove();
         };
+
+        tick();
       } catch {
-        setFailed(true);
+        try {
+          renderer?.forceContextLoss();
+          renderer?.dispose();
+        } catch {
+          /* el contexto ya no existe */
+        }
+        if (!disposed) setFailed(true);
       }
     }
 
@@ -244,23 +292,17 @@ export default function AtelierCloud({ className = '' }: { className?: string })
     };
   }, [reduced]);
 
-  const showFallback = reduced || failed || !ready;
+  const showFallback = reduced || failed || !painted;
 
   return (
     <div className={`relative ${className}`}>
       <div ref={host} className="absolute inset-0" aria-hidden />
       <div
-        className={`absolute inset-0 transition-opacity duration-1000 ease-silk ${
+        className={`pointer-events-none absolute inset-0 transition-opacity duration-1000 ease-silk ${
           showFallback ? 'opacity-100' : 'opacity-0'
         }`}
       >
-        <Img
-          src={SRC}
-          alt=""
-          fill
-          sizes="(max-width: 1024px) 90vw, 44vw"
-          className="object-contain"
-        />
+        <Img src={SRC} alt="" fill sizes="(max-width: 1024px) 90vw, 44vw" className="object-contain" />
       </div>
     </div>
   );

@@ -121,13 +121,23 @@ const MANIFEST = [
   ['photo-1711356240240-2516c04b3585', 'c/mundo-hombre', 'c'],
   ['photo-1691480150204-66dd1eb77391', 'c/mundo-accesorios', 'c'],
 
+  // ── BOUTIQUES ──────────────────────────────────────────────────────────
+  // Una tarjeta de boutique tiene que mostrar el local. Los tres interiores
+  // van en el mismo registro: luz baja, madera, latón.
+  ['photo-1771775529036-2a9dc65ca54b', 'c/boutique-villa-morra', 'c'],
+  ['photo-1782834294705-88a8559c2109', 'c/boutique-cde', 'c'],
+  ['photo-1648343615199-03567050abbb', 'c/boutique-taller', 'c'],
+
   // ── VITRINA DE PORTADA (a sangre, hace falta el doble de píxel) ─────────
   ['photo-1784821926336-e72c5d3d2bf0', 'h/aurore', 'h'],
   ['photo-1777987601677-3059be0e1388', 'h/vinci', 'h'],
   ['photo-1575032617751-6ddec2089882', 'h/nanduti-bag', 'h'],
 
   // ── PIEZA WEBGL (se muestrea en el cliente) ─────────────────────────────
-  ['photo-1562687848-c1664eff566d', 'w/particula', 'p'],
+  // Tiene que ser un negativo sobre negro de verdad: si el fondo tiene luz, los
+  // puntos del fondo forman un rectángulo alrededor de la pieza. El oxford
+  // repujado, además, es el que mejor cuenta «veintiséis manos por par».
+  ['photo-1634304138376-43a922e96c80', 'w/particula', 'h'],
 ];
 
 /**
