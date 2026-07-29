@@ -71,6 +71,12 @@ Ese script descarga los negativos, arma los recortes 4:5, genera los «detalle»
 difumina los logotipos de terceros que asoman en la fotografía de referencia y
 escribe los placeholders LQIP en `src/lib/blur.generated.ts`.
 
+**Para poner fotografía propia** no hace falta tocar el manifiesto: dejá el
+archivo en `assets-src/` con la misma ruta que la salida y volvé a correr el
+script. Por ejemplo, `assets-src/h/aurore.jpg` reemplaza la vitrina de portada.
+Las medidas y el encuadre de cada carpeta están en
+[`assets-src/README.md`](assets-src/README.md).
+
 ```bash
 npm run build      # compilación de producción
 npm run typecheck  # sólo tipos

@@ -27,3 +27,7 @@ yarn-error.log*
 .claude
 .impeccable
 skills-lock.json
+
+# fotografía propia sin versionar (ver assets-src/README.md)
+assets-src/*
+!assets-src/README.md

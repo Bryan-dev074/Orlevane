@@ -173,6 +173,27 @@ const SIZES = {
   v: { w: 1500, h: 2250, src: 2600, q: 78 },
 };
 
+/**
+ * Fotografía propia. Si existe `assets-src/<salida>.{jpg,jpeg,png,webp,avif}`,
+ * se usa ese archivo en lugar de bajar el negativo de referencia. Sirve para
+ * reemplazar piezas una por una sin tocar el manifiesto: para cambiar la
+ * vitrina alcanza con dejar `assets-src/h/aurore.jpg` y volver a correr esto.
+ */
+const LOCAL_DIR = path.join(ROOT, 'assets-src');
+const LOCAL_EXT = ['.jpg', '.jpeg', '.png', '.webp', '.avif', '.tif', '.tiff'];
+
+async function localSource(out) {
+  for (const ext of LOCAL_EXT) {
+    const file = path.join(LOCAL_DIR, `${out}${ext}`);
+    try {
+      return await fs.readFile(file);
+    } catch {
+      /* probamos la siguiente extensión */
+    }
+  }
+  return null;
+}
+
 async function download(id, width) {
   const url = `https://images.unsplash.com/${id}?w=${width}&q=85&fm=jpg&fit=max`;
   for (let i = 0; i < 4; i++) {
@@ -203,6 +224,7 @@ async function detailCrop(buf, target) {
 }
 
 const blur = {};
+const mine = [];
 let done = 0;
 
 async function run() {
@@ -216,8 +238,11 @@ async function run() {
       const [id, out, mode] = queue.shift();
       const size = SIZES[mode];
       try {
-        const buf = await download(id, size.src);
-        const pipeline = mode === 'd' ? await detailCrop(buf, size) : sharp(buf);
+        const own = await localSource(out);
+        if (own) mine.push(out);
+        const buf = own ?? (await download(id, size.src));
+        // Un negativo propio ya viene encuadrado: no se le aplica el zoom de detalle.
+        const pipeline = mode === 'd' && !own ? await detailCrop(buf, size) : sharp(buf);
         let flat = await pipeline.resize(size.w, size.h, { fit: 'cover', position: 'centre' }).toBuffer();
         if (RETOUCH[out]) flat = await retouch(flat, RETOUCH[out], size.w, size.h);
 
@@ -245,6 +270,7 @@ async function run() {
   );
 
   console.log(`  ${keys.length} imágenes · LQIP escrito en src/lib/blur.generated.ts`);
+  if (mine.length) console.log(`  ${mine.length} desde assets-src: ${mine.join(', ')}`);
   if (failures.length) {
     console.log('\n  Fallos:');
     failures.forEach((f) => console.log('   ·', f));
