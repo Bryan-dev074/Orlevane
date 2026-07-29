@@ -17,7 +17,6 @@ import SmoothScroll from '@/components/chrome/smooth-scroll';
 import Header from '@/components/chrome/header';
 import Footer from '@/components/chrome/footer';
 import SkipLink from '@/components/chrome/skip-link';
-import DemoBar from '@/components/chrome/demo-bar';
 import Overlays from '@/components/chrome/overlays';
 
 const bodoni = Bodoni_Moda({
@@ -92,7 +91,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <PrefsProvider initialLocale={locale} initialCurrency={currency}>
           <SmoothScroll />
           <SkipLink />
-          <DemoBar />
           <Header />
           <main id="contenido">{children}</main>
           <Footer />

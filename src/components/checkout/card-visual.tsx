@@ -91,7 +91,7 @@ export default function CardVisual({
               <span className="tnum grid h-8 w-14 place-items-center bg-paper/85 text-[0.8rem] text-ink">•••</span>
             </div>
             <p className="label-sm mt-4 text-paper/40">
-              {BRAND_LABEL[brand] !== '—' ? BRAND_LABEL[brand] : t('demo.badge')}
+              {BRAND_LABEL[brand] !== '—' ? BRAND_LABEL[brand] : t('k.tarjeta.cvv')}
             </p>
           </div>
         </div>

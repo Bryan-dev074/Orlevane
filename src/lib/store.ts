@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
-import type { CartLine, Order, OrderStatus, ShippingMethod } from './types';
+import type { CartLine, Order, ShippingMethod } from './types';
 import { BY_SLUG, inStock } from './products';
 
 /* ── Reglas comerciales de la demostración ─────────────────────────────── */
@@ -53,8 +53,6 @@ interface ShopState {
   searchOpen: boolean;
   menuOpen: boolean;
   sizeGuideOpen: boolean;
-  demoOpen: boolean;
-  demoBarSeen: boolean;
   toasts: Toast[];
 
   add: (slug: string, size: number, colorId: string, qty?: number) => 'ok' | 'tope' | 'sin-stock';
@@ -70,7 +68,6 @@ interface ShopState {
   clearCoupon: () => void;
 
   pushOrder: (order: Order) => void;
-  advanceOrder: (code: string) => void;
   findOrder: (code: string) => Order | undefined;
 
   seeProduct: (slug: string) => void;
@@ -79,8 +76,6 @@ interface ShopState {
   setSearchOpen: (v: boolean) => void;
   setMenuOpen: (v: boolean) => void;
   setSizeGuideOpen: (v: boolean) => void;
-  setDemoOpen: (v: boolean) => void;
-  dismissDemoBar: () => void;
 
   toast: (t: Omit<Toast, 'id'>) => void;
   dropToast: (id: number) => void;
@@ -101,8 +96,6 @@ export const useShop = create<ShopState>()(
       searchOpen: false,
       menuOpen: false,
       sizeGuideOpen: false,
-      demoOpen: false,
-      demoBarSeen: false,
       toasts: [],
 
       add: (slug, size, colorId, qty = 1) => {
@@ -172,14 +165,6 @@ export const useShop = create<ShopState>()(
 
       pushOrder: (order) => set({ orders: [order, ...get().orders].slice(0, 25) }),
 
-      advanceOrder: (code) => {
-        const chain: OrderStatus[] = ['confirmado', 'en-taller', 'despachado', 'entregado'];
-        set({
-          orders: get().orders.map((o) =>
-            o.code === code ? { ...o, status: chain[Math.min(chain.indexOf(o.status) + 1, chain.length - 1)] } : o,
-          ),
-        });
-      },
 
       findOrder: (code) => get().orders.find((o) => o.code.toUpperCase() === code.trim().toUpperCase()),
 
@@ -189,8 +174,6 @@ export const useShop = create<ShopState>()(
       setSearchOpen: (v) => set({ searchOpen: v, cartOpen: false, menuOpen: false }),
       setMenuOpen: (v) => set({ menuOpen: v, cartOpen: false, searchOpen: false }),
       setSizeGuideOpen: (v) => set({ sizeGuideOpen: v }),
-      setDemoOpen: (v) => set({ demoOpen: v }),
-      dismissDemoBar: () => set({ demoBarSeen: true }),
 
       toast: (t) => {
         const id = ++toastSeq;
@@ -209,7 +192,6 @@ export const useShop = create<ShopState>()(
         orders: s.orders,
         recent: s.recent,
         coupon: s.coupon,
-        demoBarSeen: s.demoBarSeen,
       }),
       onRehydrateStorage: () => (state) => {
         // Descarta líneas cuyo producto o talla dejaron de existir entre versiones

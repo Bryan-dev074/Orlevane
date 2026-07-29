@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [360, 480, 640, 750, 828, 1080, 1200, 1600, 1920, 2560],
     imageSizes: [96, 128, 200, 256, 320, 420, 512],
+    // 90 para la vitrina de portada: es el único plano a sangre del sitio.
+    qualities: [75, 90],
   },
   experimental: {
     optimizePackageImports: ['motion', 'three'],

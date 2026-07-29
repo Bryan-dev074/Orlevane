@@ -10,7 +10,6 @@ import { WHATSAPP_DISPLAY, waUrl } from '@/lib/whatsapp';
 
 export default function Footer() {
   const { t, locale } = usePrefs();
-  const setDemoOpen = useShop((s) => s.setDemoOpen);
   const setSizeGuideOpen = useShop((s) => s.setSizeGuideOpen);
 
   const cols: Array<{ title: string; links: Array<{ href?: string; label: string; onClick?: () => void }> }> = [
@@ -38,7 +37,7 @@ export default function Footer() {
         { label: t('p.guiaTallas'), onClick: () => setSizeGuideOpen(true) },
         { href: '/envios', label: t('ft.envios') },
         { href: '/pedidos', label: t('nav.seguimiento') },
-        { label: t('demo.masInfo'), onClick: () => setDemoOpen(true) },
+        { href: '/contacto', label: t('nav.contacto') },
       ],
     },
     {
@@ -82,7 +81,7 @@ export default function Footer() {
 
           <div className="mt-8 flex gap-5">
             {['Instagram', 'Pinterest', 'YouTube'].map((s) => (
-              <span key={s} className="label cursor-default text-paper/40" title={t('ft.aviso')}>
+              <span key={s} className="label cursor-default text-paper/40">
                 {s}
               </span>
             ))}
@@ -127,12 +126,6 @@ export default function Footer() {
             </p>
           </div>
         </div>
-        <p className="mt-5 border-t border-paper/12 pt-5 text-[0.72rem] leading-relaxed text-paper/40">
-          {t('ft.aviso')}{' '}
-          <button type="button" onClick={() => setDemoOpen(true)} className="link-rule text-gilt-soft">
-            {t('demo.masInfo')}
-          </button>
-        </p>
       </div>
     </footer>
   );

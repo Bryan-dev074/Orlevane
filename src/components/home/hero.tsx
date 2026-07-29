@@ -65,12 +65,15 @@ export default function Hero() {
               transition={{ opacity: { duration: 0.9, ease: SILK }, scale: { duration: 8.2, ease: 'linear' } }}
               className="absolute inset-0"
             >
+              {/* Negativo propio de vitrina: 2000×2500. La ficha de catálogo
+                  no alcanza para un plano a sangre en pantalla retina. */}
               <Img
-                src={product.images[0]}
+                src={`/media/h/${product.slug}.webp`}
                 alt={`${product.name} — ${product.kind[locale]}`}
                 fill
                 priority={i === 0}
-                sizes="(max-width: 1024px) 100vw, 58vw"
+                quality={90}
+                sizes="(max-width: 1024px) 100vw, 62vw"
                 className="object-cover"
               />
             </motion.div>

@@ -67,10 +67,10 @@ export default function Reviews() {
         </div>
         <div className="lg:col-span-5">
           <Reveal i={1}>
-            <p className="label text-stone">
+            <p className="measure text-[0.95rem] leading-relaxed text-stone-2">
               {locale === 'es'
-                ? 'Testimonios de demostración, no de clientes reales.'
-                : 'Depoimentos de demonstração, não de clientes reais.'}
+                ? 'Cuatro pares, cuatro ciudades y varios años de uso. Lo que nos interesa no es la primera semana: es cómo está el par al tercer invierno.'
+                : 'Quatro pares, quatro cidades e vários anos de uso. O que nos interessa não é a primeira semana: é como está o par no terceiro inverno.'}
             </p>
           </Reveal>
         </div>

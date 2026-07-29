@@ -14,8 +14,8 @@ export default function Page() {
       kicker={{ es: 'Legal', pt: 'Legal' }}
       title={{ es: 'Privacidad', pt: 'Privacidade' }}
       intro={{
-        es: 'Resumen en una línea: todo lo que escribas se queda en tu navegador y nada viaja a un servidor nuestro, porque no hay servidor nuestro.',
-        pt: 'Resumo em uma linha: tudo o que você escrever fica no seu navegador e nada viaja para um servidor nosso, porque não existe servidor nosso.',
+        es: 'Resumen en una línea: todo lo que escribas se queda en tu navegador. No hay analítica, no hay píxeles de seguimiento y no hay cookies de terceros.',
+        pt: 'Resumo em uma linha: tudo o que você escrever fica no seu navegador. Não há analytics, não há pixels de rastreamento e não há cookies de terceiros.',
       }}
       sections={[
         {

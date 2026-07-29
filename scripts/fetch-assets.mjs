@@ -23,8 +23,8 @@ const MANIFEST = [
   // ── MUJER ───────────────────────────────────────────────────────────────
   ['photo-1596703263926-eb0762ee17e4', 'p/vesper-1', 'p'],
   ['photo-1596703263926-eb0762ee17e4', 'p/vesper-2', 'd'],
-  ['photo-1562687848-c1664eff566d', 'p/aurore-1', 'p'],
-  ['photo-1591884807537-0bce39888fe0', 'p/aurore-2', 'p'],
+  ['photo-1784821926336-e72c5d3d2bf0', 'p/aurore-1', 'p'],
+  ['photo-1784821926273-729302e327a7', 'p/aurore-2', 'p'],
   ['photo-1613987876445-fcb353cd8e27', 'p/sanguine-1', 'p'],
   ['photo-1611233299310-f6276ff55307', 'p/sanguine-2', 'p'],
   ['photo-1553545985-1e0d8781d5db', 'p/lumiere-1', 'p'],
@@ -114,6 +114,11 @@ const MANIFEST = [
   ['photo-1653868250562-576619bb2ad6', 'e/cuidado-mesa', 'e'],
   ['photo-1552256028-71eb9a7ff27d', 'e/boutique-calle', 'v'],
 
+  // ── VITRINA DE PORTADA (a sangre, hace falta el doble de píxel) ─────────
+  ['photo-1784821926336-e72c5d3d2bf0', 'h/aurore', 'h'],
+  ['photo-1777987601677-3059be0e1388', 'h/vinci', 'h'],
+  ['photo-1575032617751-6ddec2089882', 'h/nanduti-bag', 'h'],
+
   // ── PIEZA WEBGL (se muestrea en el cliente) ─────────────────────────────
   ['photo-1562687848-c1664eff566d', 'w/particula', 'p'],
 ];
@@ -128,7 +133,6 @@ const MANIFEST = [
  * caen sobre superficie lisa, donde el parche no deja costura.
  */
 const RETOUCH = {
-  'p/aurore-1': [[0.695, 0.598, 0.085, 0.055]], // emblema en el contrafuerte
   'p/tote-noir-1': [[0.43, 0.695, 0.2, 0.07]], // grabado centrado en la solapa
   'p/tote-noir-2': [[0.36, 0.5, 0.3, 0.12]],
   'p/ivoire-bag-2': [[0.5, 0.61, 0.22, 0.07]], // grabado bajo el cierre
@@ -155,11 +159,18 @@ async function retouch(buf, marks, w, h) {
   return out.toBuffer();
 }
 
+/**
+ * Los tamaños salen de lo que el diseño pide en pantalla, por dos:
+ *  · ficha de catálogo ≈ 420 px CSS, ficha de producto ≈ 790 px CSS  → 1400 de ancho
+ *  · vitrina de portada ≈ 900 px CSS a sangre                        → 2000 de ancho
+ * Con menos, en pantalla retina el navegador agranda y la foto se ve blanda.
+ */
 const SIZES = {
-  p: { w: 1000, h: 1250, src: 1700 },
-  d: { w: 1000, h: 1250, src: 2200 },
-  e: { w: 1920, h: 1280, src: 2400 },
-  v: { w: 1280, h: 1920, src: 2200 },
+  p: { w: 1400, h: 1750, src: 2400, q: 78 },
+  d: { w: 1400, h: 1750, src: 3000, q: 78 },
+  h: { w: 2000, h: 2500, src: 3400, q: 84 },
+  e: { w: 2200, h: 1467, src: 2800, q: 78 },
+  v: { w: 1500, h: 2250, src: 2600, q: 78 },
 };
 
 async function download(id, width) {
@@ -195,9 +206,7 @@ const blur = {};
 let done = 0;
 
 async function run() {
-  await fs.mkdir(path.join(OUT, 'p'), { recursive: true });
-  await fs.mkdir(path.join(OUT, 'e'), { recursive: true });
-  await fs.mkdir(path.join(OUT, 'w'), { recursive: true });
+  for (const dir of ['p', 'e', 'h', 'w']) await fs.mkdir(path.join(OUT, dir), { recursive: true });
 
   const queue = [...MANIFEST];
   const failures = [];
@@ -213,7 +222,7 @@ async function run() {
         if (RETOUCH[out]) flat = await retouch(flat, RETOUCH[out], size.w, size.h);
 
         const resized = sharp(flat);
-        await resized.clone().webp({ quality: 80, effort: 5 }).toFile(path.join(OUT, `${out}.webp`));
+        await resized.clone().webp({ quality: size.q, effort: 5 }).toFile(path.join(OUT, `${out}.webp`));
 
         const lqip = await resized.clone().resize(20, null).blur(1.4).webp({ quality: 32 }).toBuffer();
         blur[`/media/${out}.webp`] = `data:image/webp;base64,${lqip.toString('base64')}`;

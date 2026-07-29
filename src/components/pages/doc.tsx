@@ -90,8 +90,6 @@ export default function Doc({
               </div>
             </section>
           ))}
-
-          <p className="border-t border-stone/30 pt-6 text-[0.78rem] text-stone">{t('ft.aviso')}</p>
         </div>
       </div>
     </div>

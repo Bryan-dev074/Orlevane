@@ -11,6 +11,12 @@ guaraní**.
 > las boutiques, los datos bancarios y las reseñas son material inventado. La
 > pasarela de pago corre entera en el navegador: no hay servidor, no se envía
 > nada y no se cobra nada. **Nunca ingreses una tarjeta real.**
+>
+> En el sitio esto se declara en un solo lugar, a propósito: el botón final del
+> checkout dice **«Realizar pago de prueba»**, y junto al formulario de tarjeta
+> están las tarjetas de prueba. No hay banda ni cartel de demostración en el
+> resto de la navegación, para que la tienda se pueda mostrar a un cliente sin
+> que la ilusión se rompa. La cláusula completa vive al final de `/terminos`.
 
 ---
 
@@ -122,7 +128,9 @@ public/media/     fotografía procesada (p/ ficha · e/ editorial · w/ WebGL)
 1. Reemplazar la fotografía por producción propia — ver `CREDITS.md`.
 2. Reemplazar catálogo, precios, stock, boutiques, datos bancarios y reseñas.
 3. Conectar una pasarela real y mover el checkout al servidor.
-4. Quitar la barra y el aviso de demostración.
+4. Cambiar la etiqueta del botón final (`k.confirmar`, `k.confirmarTransfer`),
+   quitar el bloque de tarjetas de prueba del paso de pago y la última sección
+   de `/terminos`.
 
 ## Stack
 

@@ -888,7 +888,7 @@ export default function Checkout() {
                         <Link href="/privacidad" className="link-rule text-ink">
                           {t('k.privacidad')}
                         </Link>
-                        . {t('k.aceptoDemo')}
+                        .
                       </span>
                     </label>
                     {errors.terms && (
@@ -1031,7 +1031,6 @@ export default function Checkout() {
                   );
                 })}
               </ul>
-              <p className="mt-10 text-[0.72rem] text-paper/40">{t('ft.aviso')}</p>
             </div>
           </motion.div>
         )}

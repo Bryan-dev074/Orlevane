@@ -124,7 +124,6 @@ export default function Boutiques() {
         ))}
       </div>
 
-      <p className="mt-16 border-t border-stone/30 pt-6 text-[0.78rem] text-stone">{t('ft.aviso')}</p>
     </div>
   );
 }

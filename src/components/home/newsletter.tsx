@@ -82,7 +82,7 @@ export default function Newsletter() {
                     className={`mt-3 text-[0.76rem] ${state === 'error' ? 'text-claret' : 'text-stone'}`}
                     role={state === 'error' ? 'alert' : undefined}
                   >
-                    {state === 'error' ? t('home.boletin.error') : t('home.boletin.demo')}
+                    {state === 'error' ? t('home.boletin.error') : t('home.boletin.nota')}
                   </p>
                 </motion.form>
               )}

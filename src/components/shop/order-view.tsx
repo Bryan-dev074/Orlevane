@@ -6,6 +6,7 @@ import { motion } from 'motion/react';
 
 import Img from '@/components/ui/img';
 import { Btn, BtnLink } from '@/components/ui/button';
+
 import { RuleIn } from '@/components/ui/reveal';
 import { usePrefs } from '@/lib/prefs';
 import { useShop, useHydrated } from '@/lib/store';
@@ -21,7 +22,6 @@ export default function OrderView({ code }: { code: string }) {
   const { t, locale, currency } = usePrefs();
   const hydrated = useHydrated();
   const order = useShop((s) => s.orders.find((o) => o.code.toUpperCase() === code.toUpperCase()));
-  const advance = useShop((s) => s.advanceOrder);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -101,10 +101,7 @@ export default function OrderView({ code }: { code: string }) {
           </div>
         </div>
 
-        <p className="mt-7 text-[0.85rem] text-stone-2">
-          {t('o.correo', { email: order.customer.email })}{' '}
-          <span className="text-stone">{t('o.correoDemo')}</span>
-        </p>
+        <p className="mt-7 text-[0.85rem] text-stone-2">{t('o.correo', { email: order.customer.email })}</p>
       </header>
 
       <div className="grid gap-12 py-12 lg:grid-cols-12 lg:gap-16">
@@ -150,11 +147,6 @@ export default function OrderView({ code }: { code: string }) {
               })}
             </ol>
 
-            {idx < CHAIN.length - 1 && (
-              <Btn tone="outline" size="sm" arrow className="mt-2" onClick={() => advance(order.code)}>
-                {t('o.avanzar')}
-              </Btn>
-            )}
           </section>
 
           {/* Pago */}

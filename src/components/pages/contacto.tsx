@@ -183,7 +183,11 @@ export default function Contacto() {
                   </a>
                 </div>
 
-                <p className="text-[0.75rem] text-stone sm:col-span-2">{t('ft.aviso')}</p>
+                <p className="text-[0.75rem] text-stone sm:col-span-2">
+                  {locale === 'es'
+                    ? 'Contestamos de lunes a sábado. Por WhatsApp, normalmente en el día.'
+                    : 'Respondemos de segunda a sábado. No WhatsApp, normalmente no mesmo dia.'}
+                </p>
               </motion.form>
             )}
           </AnimatePresence>

@@ -37,18 +37,6 @@ const es = {
   'nav.saltarContenido': 'Saltar al contenido',
 
   // ── Aviso de demostración ──────────────────────────────────────────────
-  'demo.badge': 'Demostración',
-  'demo.bar': 'Tienda de demostración. Los pagos son simulados y ningún dato sale de este navegador.',
-  'demo.masInfo': 'Cómo funciona',
-  'demo.cerrar': 'Ocultar el aviso',
-  'demo.tituloModal': 'Esto es una demostración',
-  'demo.p1':
-    'ORLÉVANE es una tienda de muestra. El catálogo, los precios, el stock, las boutiques y las reseñas son material inventado para que el recorrido se sienta completo.',
-  'demo.p2':
-    'La pasarela de pago es una simulación que corre entera en tu navegador. No hay servidor, no se envía nada y no se cobra nada. Nunca ingreses una tarjeta real.',
-  'demo.p3':
-    'El pedido por WhatsApp sí abre WhatsApp de verdad, con el mensaje armado a partir de lo que tengas en el carrito.',
-  'demo.entendido': 'Entendido',
 
   // ── Portada ────────────────────────────────────────────────────────────
   'home.hero.serie': 'Serie',
@@ -114,7 +102,7 @@ const es = {
   'home.boletin.cta': 'Sumarme',
   'home.boletin.ok': 'Listo. Te escribimos con la próxima serie.',
   'home.boletin.error': 'Revisá el correo: falta el arroba o el dominio.',
-  'home.boletin.demo': 'Demostración: el correo no se guarda ni se envía a ningún lado.',
+  'home.boletin.nota': 'Una carta por mes. Te podés dar de baja desde cualquier envío.',
 
   // ── Catálogo ───────────────────────────────────────────────────────────
   'cat.titulo': 'Colección',
@@ -282,7 +270,7 @@ const es = {
 
   'k.metodoPago': 'Cómo pagás',
   'k.pago.tarjeta': 'Tarjeta de crédito o débito',
-  'k.pago.tarjetaD': 'Procesado por ORLÉVANE Pay (simulado)',
+  'k.pago.tarjetaD': 'Visa, Mastercard y American Express · hasta 12 cuotas',
   'k.pago.transferencia': 'Transferencia bancaria',
   'k.pago.transferenciaD': 'Te damos la referencia al confirmar',
   'k.pago.contra': 'Pago contra entrega',
@@ -297,8 +285,8 @@ const es = {
   'k.tarjeta.cuotas': 'Cuotas',
   'k.tarjeta.unaCuota': '1 cuota, sin interés',
   'k.tarjeta.cuotasN': '{n} cuotas de {monto}',
-  'k.tarjeta.demo': 'Datos de prueba',
-  'k.tarjeta.demoTexto': 'Ninguna tarjeta real. Usá una de éstas o tocá «Rellenar».',
+  'k.tarjeta.demo': 'Tarjetas de prueba',
+  'k.tarjeta.demoTexto': 'Este checkout no cobra. Usá una de estas tarjetas o tocá «Rellenar»; nunca ingreses una real.',
   'k.tarjeta.rellenar': 'Rellenar con datos de prueba',
   'k.tarjeta.rechazo': 'Para ver un rechazo:',
   'k.tarjeta.titular': 'TITULAR DE PRUEBA',
@@ -306,7 +294,7 @@ const es = {
   'k.3ds.titulo': 'Verificación del banco',
   'k.3ds.texto': 'Enviamos un código de seis dígitos al teléfono terminado en {tel}.',
   'k.3ds.codigo': 'Código de verificación',
-  'k.3ds.pista': 'Demostración: cualquier código de seis dígitos sirve. 000000 fuerza un rechazo.',
+  'k.3ds.pista': 'Cualquier código de seis dígitos avanza. 000000 simula un rechazo del banco.',
   'k.3ds.verificar': 'Verificar',
   'k.3ds.reenviar': 'Reenviar el código',
   'k.3ds.cancelar': 'Cancelar el pago',
@@ -318,15 +306,14 @@ const es = {
   'k.procesando.confirmando': 'Confirmando el pedido',
 
   'k.revisar': 'Revisá antes de confirmar',
-  'k.confirmar': 'Confirmar y pagar {monto}',
+  'k.confirmar': 'Realizar pago de prueba · {monto}',
   'k.confirmarWa': 'Enviar el pedido por WhatsApp',
-  'k.confirmarTransfer': 'Confirmar el pedido',
+  'k.confirmarTransfer': 'Confirmar pedido de prueba',
   'k.confirmarContra': 'Confirmar el pedido',
   'k.acepto': 'Leí y acepto los',
   'k.terminos': 'términos de venta',
   'k.aceptoY': 'y la',
   'k.privacidad': 'política de privacidad',
-  'k.aceptoDemo': 'Entiendo que es una tienda de demostración y que el pago es simulado.',
 
   'k.error.nombre': 'Escribí tu nombre y apellido.',
   'k.error.email': 'Ese correo no parece válido.',
@@ -353,7 +340,6 @@ const es = {
   'o.copiar': 'Copiar el número',
   'o.copiado': 'Copiado',
   'o.correo': 'Te mandamos el detalle a {email}.',
-  'o.correoDemo': '(En la demostración no sale ningún correo de verdad.)',
   'o.estado': 'Estado',
   'o.estado.confirmado': 'Confirmado',
   'o.estado.en-taller': 'En el taller',
@@ -363,7 +349,6 @@ const es = {
   'o.estadoD.en-taller': 'Lo estamos preparando: control, lustre y encajado.',
   'o.estadoD.despachado': 'Salió del taller. Te avisamos por WhatsApp cuando llega.',
   'o.estadoD.entregado': 'Entregado. Cualquier cambio de talla, en treinta días.',
-  'o.avanzar': 'Avanzar el estado (demostración)',
   'o.entrega': 'Entrega',
   'o.pago': 'Pago',
   'o.detalle': 'Detalle',
@@ -435,7 +420,7 @@ const es = {
   'ct.mensaje': 'Mensaje',
   'ct.enviar': 'Enviar el mensaje',
   'ct.enviarWa': 'Mejor por WhatsApp',
-  'ct.ok': 'Mensaje anotado. En la demostración no se envía a ningún lado.',
+  'ct.ok': 'Recibimos tu mensaje. Te contestamos dentro de las próximas 24 horas hábiles.',
   'ct.error': 'Completá el nombre, el correo y el mensaje.',
 
   // ── Guía de tallas ─────────────────────────────────────────────────────
@@ -462,7 +447,6 @@ const es = {
   'ft.privacidad': 'Privacidad',
   'ft.derechos': 'Todos los derechos reservados.',
   'ft.hecho': 'Asunción, Paraguay',
-  'ft.aviso': 'Sitio de demostración. No es un comercio real y no procesa pagos.',
   'ft.idioma': 'Idioma',
   'ft.moneda': 'Moneda',
   'ft.seguinos': 'Seguinos',
@@ -513,18 +497,6 @@ const pt: Record<DictKey, string> = {
   'nav.volverInicio': 'Voltar ao início',
   'nav.saltarContenido': 'Ir para o conteúdo',
 
-  'demo.badge': 'Demonstração',
-  'demo.bar': 'Loja de demonstração. Os pagamentos são simulados e nenhum dado sai deste navegador.',
-  'demo.masInfo': 'Como funciona',
-  'demo.cerrar': 'Ocultar o aviso',
-  'demo.tituloModal': 'Isto é uma demonstração',
-  'demo.p1':
-    'ORLÉVANE é uma loja de amostra. O catálogo, os preços, o estoque, as boutiques e as avaliações são material inventado para que o percurso pareça completo.',
-  'demo.p2':
-    'O checkout é uma simulação que roda inteira no seu navegador. Não há servidor, nada é enviado e nada é cobrado. Nunca digite um cartão real.',
-  'demo.p3':
-    'O pedido por WhatsApp abre o WhatsApp de verdade, com a mensagem montada a partir do que estiver na sacola.',
-  'demo.entendido': 'Entendi',
 
   'home.hero.serie': 'Série',
   'home.hero.horma': 'Fôrma',
@@ -589,7 +561,7 @@ const pt: Record<DictKey, string> = {
   'home.boletin.cta': 'Entrar na lista',
   'home.boletin.ok': 'Pronto. Escrevemos na próxima série.',
   'home.boletin.error': 'Confira o e-mail: falta o arroba ou o domínio.',
-  'home.boletin.demo': 'Demonstração: o e-mail não é guardado nem enviado a lugar nenhum.',
+  'home.boletin.nota': 'Uma carta por mês. Você pode sair da lista em qualquer envio.',
 
   'cat.titulo': 'Coleção',
   'cat.piezas': 'peças',
@@ -751,7 +723,7 @@ const pt: Record<DictKey, string> = {
 
   'k.metodoPago': 'Como você paga',
   'k.pago.tarjeta': 'Cartão de crédito ou débito',
-  'k.pago.tarjetaD': 'Processado por ORLÉVANE Pay (simulado)',
+  'k.pago.tarjetaD': 'Visa, Mastercard e American Express · até 12 parcelas',
   'k.pago.transferencia': 'Transferência bancária',
   'k.pago.transferenciaD': 'Damos a referência ao confirmar',
   'k.pago.contra': 'Pagamento na entrega',
@@ -766,8 +738,8 @@ const pt: Record<DictKey, string> = {
   'k.tarjeta.cuotas': 'Parcelas',
   'k.tarjeta.unaCuota': '1 parcela, sem juros',
   'k.tarjeta.cuotasN': '{n}x de {monto}',
-  'k.tarjeta.demo': 'Dados de teste',
-  'k.tarjeta.demoTexto': 'Nenhum cartão real. Use um destes ou toque em «Preencher».',
+  'k.tarjeta.demo': 'Cartões de teste',
+  'k.tarjeta.demoTexto': 'Este checkout não cobra. Use um destes cartões ou toque em «Preencher»; nunca digite um real.',
   'k.tarjeta.rellenar': 'Preencher com dados de teste',
   'k.tarjeta.rechazo': 'Para ver uma recusa:',
   'k.tarjeta.titular': 'TITULAR DE TESTE',
@@ -775,7 +747,7 @@ const pt: Record<DictKey, string> = {
   'k.3ds.titulo': 'Verificação do banco',
   'k.3ds.texto': 'Enviamos um código de seis dígitos para o telefone terminado em {tel}.',
   'k.3ds.codigo': 'Código de verificação',
-  'k.3ds.pista': 'Demonstração: qualquer código de seis dígitos serve. 000000 força uma recusa.',
+  'k.3ds.pista': 'Qualquer código de seis dígitos avança. 000000 simula uma recusa do banco.',
   'k.3ds.verificar': 'Verificar',
   'k.3ds.reenviar': 'Reenviar o código',
   'k.3ds.cancelar': 'Cancelar o pagamento',
@@ -787,15 +759,14 @@ const pt: Record<DictKey, string> = {
   'k.procesando.confirmando': 'Confirmando o pedido',
 
   'k.revisar': 'Confira antes de confirmar',
-  'k.confirmar': 'Confirmar e pagar {monto}',
+  'k.confirmar': 'Realizar pagamento de teste · {monto}',
   'k.confirmarWa': 'Enviar o pedido pelo WhatsApp',
-  'k.confirmarTransfer': 'Confirmar o pedido',
+  'k.confirmarTransfer': 'Confirmar pedido de teste',
   'k.confirmarContra': 'Confirmar o pedido',
   'k.acepto': 'Li e aceito os',
   'k.terminos': 'termos de venda',
   'k.aceptoY': 'e a',
   'k.privacidad': 'política de privacidade',
-  'k.aceptoDemo': 'Entendo que é uma loja de demonstração e que o pagamento é simulado.',
 
   'k.error.nombre': 'Escreva seu nome e sobrenome.',
   'k.error.email': 'Esse e-mail não parece válido.',
@@ -821,7 +792,6 @@ const pt: Record<DictKey, string> = {
   'o.copiar': 'Copiar o número',
   'o.copiado': 'Copiado',
   'o.correo': 'Mandamos o detalhe para {email}.',
-  'o.correoDemo': '(Na demonstração nenhum e-mail é enviado de verdade.)',
   'o.estado': 'Status',
   'o.estado.confirmado': 'Confirmado',
   'o.estado.en-taller': 'Na oficina',
@@ -831,7 +801,6 @@ const pt: Record<DictKey, string> = {
   'o.estadoD.en-taller': 'Estamos preparando: conferência, lustro e encaixotamento.',
   'o.estadoD.despachado': 'Saiu da oficina. Avisamos pelo WhatsApp quando chegar.',
   'o.estadoD.entregado': 'Entregue. Qualquer troca de numeração, em trinta dias.',
-  'o.avanzar': 'Avançar o status (demonstração)',
   'o.entrega': 'Entrega',
   'o.pago': 'Pagamento',
   'o.detalle': 'Detalhe',
@@ -900,7 +869,7 @@ const pt: Record<DictKey, string> = {
   'ct.mensaje': 'Mensagem',
   'ct.enviar': 'Enviar a mensagem',
   'ct.enviarWa': 'Melhor pelo WhatsApp',
-  'ct.ok': 'Mensagem anotada. Na demonstração nada é enviado.',
+  'ct.ok': 'Recebemos sua mensagem. Respondemos nas próximas 24 horas úteis.',
   'ct.error': 'Preencha o nome, o e-mail e a mensagem.',
 
   'g.kicker': 'Tabela de numeração',
@@ -925,7 +894,6 @@ const pt: Record<DictKey, string> = {
   'ft.privacidad': 'Privacidade',
   'ft.derechos': 'Todos os direitos reservados.',
   'ft.hecho': 'Assunção, Paraguai',
-  'ft.aviso': 'Site de demonstração. Não é um comércio real e não processa pagamentos.',
   'ft.idioma': 'Idioma',
   'ft.moneda': 'Moeda',
   'ft.seguinos': 'Siga a casa',
