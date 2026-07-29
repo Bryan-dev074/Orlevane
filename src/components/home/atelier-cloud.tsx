@@ -90,11 +90,8 @@ export default function AtelierCloud({ className = '' }: { className?: string })
 
         const planeW = 1.9;
         const planeH = (ch / cw) * planeW;
-        // El fondo del negativo se descarta: sólo interesa el par y la luz que le
-        // pega. El corte no es seco —los puntos del borde entran con menos alfa—
-        // porque un umbral duro recorta la pieza contra un rectángulo visible.
-        const FLOOR = 0.13;
-        const FADE = 0.1;
+        // El fondo del negativo se descarta: sólo interesa el par y la luz que le pega.
+        const FLOOR = 0.11;
 
         for (let y = 0; y < rows; y++) {
           for (let x = 0; x < cols; x++) {
@@ -114,8 +111,7 @@ export default function AtelierCloud({ className = '' }: { className?: string })
             // Marfil en las luces, dorado en los medios. El brillo del punto lleva
             // la luminancia del píxel, así que el volumen del zapato se lee solo.
             const warm = Math.pow(Math.min(1, (lum - FLOOR) / (1 - FLOOR)), 0.68);
-            const edge = Math.min(1, (lum - FLOOR) / FADE);
-            colors.push((0.32 + warm * 0.76) * edge, (0.26 + warm * 0.7) * edge, (0.18 + warm * 0.56) * edge);
+            colors.push(0.24 + warm * 0.72, 0.2 + warm * 0.68, 0.15 + warm * 0.55);
             seeds.push(Math.random());
           }
         }
@@ -207,7 +203,7 @@ export default function AtelierCloud({ className = '' }: { className?: string })
           renderer!.setSize(w, h, false);
           camera.aspect = w / h;
           camera.updateProjectionMatrix();
-          mat.uniforms.uSize.value = Math.max(2.2, (h / 420) * 4.1) * dpr;
+          mat.uniforms.uSize.value = Math.max(2, (h / 420) * 3.6) * dpr;
         };
         resize();
         const ro = new ResizeObserver(resize);

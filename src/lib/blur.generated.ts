@@ -96,7 +96,7 @@ export const BLUR: Record<string, string> = {
   "/media/p/vesper-2.webp": "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAABQBACdASoUABkAPwlwrU+rpqQiMAgBcCEJZwDM0Bu1FludHht8uzqa+jwAAP7nyj0N2aYz0lz1MR8rEXkJzi9YVdugNJxvdnIbv7p3LkAAAA==",
   "/media/p/vinci-1.webp": "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADQBACdASoUABkAPwl0sFCrpySisAgBcCEJZwDLaCHheVYcuhN0NE1mtn7nvOkgAAD+y4RWbAOwa3MBoWHgsCYPJWkpMCeKqQHe2AgDasJDZzwAAAA=",
   "/media/p/vinci-2.webp": "data:image/webp;base64,UklGRngAAABXRUJQVlA4IGwAAABwBACdASoUABkAPwl0sE+rpySiMAgBcCEJQBbboAAONrijojf0UHAC0jCpgAD+DPkdLaY4/HGauWeXLNPt7v7LZ6XMqY/sjUPMeWDgBn34b7ubj9N3eb/SZvfNHfT6e26iCtkZchQ2oMmAAAA=",
-  "/media/w/particula.webp": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAACwBACdASoUABkAPwVusE+rpqSiMBgMAXAgiWIAzuwQ78n2LGpjja5EgSLOQN/IAP7udnVc/DZibYoDeiySaUJCmO830gLlogJ4YH3RrfBfqgAA",
+  "/media/w/particula.webp": "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQBACdASoUABkAPwlysVArpqSiqA1RcCEJZQDE2EXfTyoGI0VO072Q93jFGxNLgAD+93tURefXurBJ0AnvRUElVjARZ31tjkYBDQ3Zhu3qpqPmGhg8EDAA",
 };
 
 export const blurFor = (src: string): string | undefined => BLUR[src];

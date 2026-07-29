@@ -134,10 +134,7 @@ const MANIFEST = [
   ['photo-1575032617751-6ddec2089882', 'h/nanduti-bag', 'h'],
 
   // ── PIEZA WEBGL (se muestrea en el cliente) ─────────────────────────────
-  // Tiene que ser un negativo sobre negro de verdad: si el fondo tiene luz, los
-  // puntos del fondo forman un rectángulo alrededor de la pieza. El oxford
-  // repujado, además, es el que mejor cuenta «veintiséis manos por par».
-  ['photo-1634304138376-43a922e96c80', 'w/particula', 'h'],
+  ['photo-1562687848-c1664eff566d', 'w/particula', 'p'],
 ];
 
 /**
