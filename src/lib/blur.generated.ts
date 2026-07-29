@@ -1,6 +1,9 @@
 // Generado por scripts/fetch-assets.mjs — no editar a mano.
 
 export const BLUR: Record<string, string> = {
+  "/media/c/mundo-accesorios.webp": "data:image/webp;base64,UklGRoAAAABXRUJQVlA4IHQAAACwBQCdASoUABsAPwlsrVArpaQisAgBcCEJZgDI0UE5oAwkTXUbnYcu3TFkywb9CUp7z5lhcAAA/u/CmrLdj53tlxyKEry/cEODvNWho1jQg2lYkTFNHLEqfN28j9QCklaaOl/VwIPvK8onRbyETcmCJIAAAA==",
+  "/media/c/mundo-hombre.webp": "data:image/webp;base64,UklGRmgAAABXRUJQVlA4IFwAAACwBACdASoUABsAPwl4slOrpyQiqAqpcCEJZQAAj/WQG7TzpRGctt9t4xcpGjMAAP6uGfi/yHn5/0btsMqJalcT5uXAcbDNmS8Z/yZ5lWt9+OpGsyVL4wYzJyVuAA==",
+  "/media/c/mundo-mujer.webp": "data:image/webp;base64,UklGRnAAAABXRUJQVlA4IGQAAABQBACdASoUABsAPv1sq0+rJiQiMAwBYB+JYwC7AB4+AVTm7rzQOQoXb/+AAOJ0CVwLqUR3R+pk4Z0mkiwLeNlpmvyTDDVk4WiCSbTmKoRy5Jiiw5V7Ec0l8QGO7TgJ+zmtqAAA",
   "/media/e/atelier-banco.webp": "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAADwAwCdASoUAA0APwlwr0+rpqQiMAgBcCEJZQC/OBo/SXkdWC5jazcAAP069y9rKFhaL8iUvCnGhnV+cifDl/a3a2cMwTUAAAA=",
   "/media/e/atelier-costura.webp": "data:image/webp;base64,UklGRlYAAABXRUJQVlA4IEoAAADQAwCdASoUAA0APwlusE+rpiSiMAgBcCEJZQDE2B9nepcj3K9btVAA+prsOboq0LpAQA6tLqqq5pwoW1DKN5XkILyY0qmg+AAAAA==",
   "/media/e/atelier-herramientas.webp": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAACwAwCdASoUAA0APwlysFArpySisAgBcCEJYgCdACGJCDmC8gCORAD+6MwAhZCywYenRUriOo8fyVG6vErb1XxHqstXz22yopVSyQNYgAA=",
@@ -15,7 +18,7 @@ export const BLUR: Record<string, string> = {
   "/media/e/campana-sastre.webp": "data:image/webp;base64,UklGRnYAAABXRUJQVlA4IGoAAABQBQCdASoUAB4APwlwsVArpiSiqA1RcCEJZQDBzA8uvb66nOe3X98u1wl4X0uPDh/OJgAA+VRNYHElGHexyIX8cOCS5NThbHA4rplTeWOK6SwQN5RVZCem+xAqOfvk2WaZ3+v029NSE5AA",
   "/media/e/campana-sombra.webp": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAABQBQCdASoUAB4APwl8sFQrp6QjKAqpcCEJZQC3uDNGzhFLLHElpzvEWStpy5nety5AAEAA/pCZSNiDOd44LpM89oVRJh+J6lfC/ARmcdqYWCu8ZuRdRqU4KVlY/x7wAAA=",
   "/media/e/cuidado-mesa.webp": "data:image/webp;base64,UklGRlAAAABXRUJQVlA4IEQAAAAwBACdASoUAA0APwlwsFArpiSisAgBcCEJZQDKAB0/mB+lMs/mYg6mTQAA/ezYAWmfEAmQlbm0308CiL9behqPnmAAAA==",
-  "/media/h/aurore.webp": "data:image/webp;base64,UklGRlgAAABXRUJQVlA4IEwAAAAQBACdASoUABkAPvlgqU+qpSQiN/qoAVAfCWMAxnwh3ti+XNBLdfUiAAD+7zzyumfMKCZp0c59NVurBZss7QUmuzJybd0gbQ+KzAAA",
+  "/media/h/aurore.webp": "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAABQBACdASoUABkAPvlkqU+qpaQiN/qoAVAfCWMAt7gh4FlRAsTiKYlo+lJoAP7vPPK3eKk6ko28pxqLarixp0kSfBW4NThHdRWvpAAAAAA=",
   "/media/h/nanduti-bag.webp": "data:image/webp;base64,UklGRmoAAABXRUJQVlA4IF4AAABwBACdASoUABkAPwl0rk+rpyQiMBgMAXAhCWMAwcw0bGfPNJLjQUbWwejpgAD+77wLrYVuhPzskVfqjfkVMPOY/FG4PcDAEXE1YRgjBh8iHVc7wTX+Dlcvg+bwAAAA",
   "/media/h/vinci.webp": "data:image/webp;base64,UklGRl4AAABXRUJQVlA4IFIAAADQBACdASoUABkAPv1qqU+rJiOiMAwBYB+JZwAAW+/ojKWD3LFrSuDuRUK0O7oQAAD+y4RWbAOwa3MOBpw2CFbcm54/LV/EnA4ekx7lXR6IAAAA",
   "/media/p/atelier-blanc-1.webp": "data:image/webp;base64,UklGRmwAAABXRUJQVlA4IGAAAADQBACdASoUABkAPwlusVIrpaSisBgIAXAhCWkAAC5DfPPLADHSibPHbQz0UQjGAAD+69/ntrxUhUy4Nb/zO1ZgTbKdqEqhTPSr5M8tAEBG322hZzKObbveqnzspDAAAAA=",

@@ -114,6 +114,13 @@ const MANIFEST = [
   ['photo-1653868250562-576619bb2ad6', 'e/cuidado-mesa', 'e'],
   ['photo-1552256028-71eb9a7ff27d', 'e/boutique-calle', 'v'],
 
+  // ── TRÍO DE MUNDOS EN PORTADA ──────────────────────────────────────────
+  // Mismo registro los tres: una sola pieza, fondo claro, sombra blanda.
+  // Es lo que hace que se lean como una campaña y no como tres fotos sueltas.
+  ['photo-1621996659490-3275b4d0d951', 'c/mundo-mujer', 'c'],
+  ['photo-1711356240240-2516c04b3585', 'c/mundo-hombre', 'c'],
+  ['photo-1691480150204-66dd1eb77391', 'c/mundo-accesorios', 'c'],
+
   // ── VITRINA DE PORTADA (a sangre, hace falta el doble de píxel) ─────────
   ['photo-1784821926336-e72c5d3d2bf0', 'h/aurore', 'h'],
   ['photo-1777987601677-3059be0e1388', 'h/vinci', 'h'],
@@ -169,6 +176,7 @@ const SIZES = {
   p: { w: 1400, h: 1750, src: 2400, q: 78 },
   d: { w: 1400, h: 1750, src: 3000, q: 78 },
   h: { w: 2000, h: 2500, src: 3400, q: 84 },
+  c: { w: 1500, h: 2000, src: 2600, q: 80 },
   e: { w: 2200, h: 1467, src: 2800, q: 78 },
   v: { w: 1500, h: 2250, src: 2600, q: 78 },
 };
@@ -228,7 +236,7 @@ const mine = [];
 let done = 0;
 
 async function run() {
-  for (const dir of ['p', 'e', 'h', 'w']) await fs.mkdir(path.join(OUT, dir), { recursive: true });
+  for (const dir of ['p', 'e', 'c', 'h', 'w']) await fs.mkdir(path.join(OUT, dir), { recursive: true });
 
   const queue = [...MANIFEST];
   const failures = [];
@@ -279,3 +287,4 @@ async function run() {
 }
 
 run();
+

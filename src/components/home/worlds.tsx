@@ -10,10 +10,15 @@ import { usePrefs } from '@/lib/prefs';
 import { byCategory } from '@/lib/products';
 import type { Category } from '@/lib/types';
 
+/**
+ * Los tres planos van en el mismo registro —una sola pieza, fondo claro, sombra
+ * blanda— porque si no se leen como tres fotos sueltas en vez de una campaña.
+ * Y en una casa de calzado, la entrada a cada mundo tiene que mostrar la pieza.
+ */
 const WORLDS = [
-  { id: 'mujer', img: '/media/e/campana-nocturne.webp', t: 'home.mundos.mujer.titulo', d: 'home.mundos.mujer.texto' },
-  { id: 'hombre', img: '/media/e/campana-sastre.webp', t: 'home.mundos.hombre.titulo', d: 'home.mundos.hombre.texto' },
-  { id: 'accesorios', img: '/media/e/campana-piel.webp', t: 'home.mundos.accesorios.titulo', d: 'home.mundos.accesorios.texto' },
+  { id: 'mujer', img: '/media/c/mundo-mujer.webp', t: 'home.mundos.mujer.titulo', d: 'home.mundos.mujer.texto' },
+  { id: 'hombre', img: '/media/c/mundo-hombre.webp', t: 'home.mundos.hombre.titulo', d: 'home.mundos.hombre.texto' },
+  { id: 'accesorios', img: '/media/c/mundo-accesorios.webp', t: 'home.mundos.accesorios.titulo', d: 'home.mundos.accesorios.texto' },
 ] as const;
 
 export default function Worlds() {
