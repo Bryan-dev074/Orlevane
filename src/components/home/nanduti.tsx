@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
 
 import Img from '@/components/ui/img';
@@ -10,7 +10,7 @@ import { Price } from '@/components/ui/bits';
 import { Reveal, SplitLines } from '@/components/ui/reveal';
 import { usePrefs } from '@/lib/prefs';
 import { NANDUTI } from '@/lib/products';
-import { CURTAIN } from '@/lib/motion';
+import { CURTAIN, SILK } from '@/lib/motion';
 
 /**
  * Radial de ñandutí dibujado como trazo, no como imagen: se dibuja al entrar.
@@ -24,55 +24,90 @@ function Radial({ className = '' }: { className?: string }) {
   // El bastidor asoma fuera de la sección recortada; se observa el contenedor,
   // no cada trazo, porque muchos trazos nunca llegan a intersecar por sí solos.
   const host = useRef<HTMLDivElement>(null);
-  const on = useInView(host, { once: true, amount: 0.1 }) && !reduced;
+  const inView = useInView(host, { once: true, amount: 0.1 });
+
+  /* El dibujo trazo a trazo eran ~125 nodos SVG animados a la vez por
+     JavaScript: al entrar a la sección se medían cuadros de hasta 167 ms en
+     escritorio, y en teléfono eso era el tirón que congelaba el scroll. El
+     dibujo queda para puntero fino y pantalla grande; en teléfono el bastidor
+     entra entero con un solo fundido: una animación en lugar de ciento
+     veinticinco. Y los nudos, incluso en escritorio, entran como UN grupo. */
+  const [rich, setRich] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(pointer: fine) and (min-width: 1024px)');
+    const sync = () => setRich(mq.matches);
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+  const draw = rich && !reduced;
 
   const spokes = Array.from({ length: 24 }, (_, i) => (i * Math.PI * 2) / 24);
   const rings = [0.26, 0.44, 0.62, 0.8, 0.96];
+  const dots = spokes.flatMap((a, i) =>
+    rings.slice(0, 4).map((r, j) => (
+      <circle key={`${i}-${j}`} cx={r5(Math.cos(a) * r)} cy={r5(Math.sin(a) * r)} r={0.012} />
+    )),
+  );
 
   return (
     <div ref={host} className={className} aria-hidden>
-      <svg viewBox="-1.1 -1.1 2.2 2.2" className="h-full w-full">
+      <motion.svg
+        viewBox="-1.1 -1.1 2.2 2.2"
+        className="h-full w-full"
+        initial={false}
+        animate={{ opacity: reduced || draw || inView ? 1 : 0 }}
+        transition={{ duration: draw || reduced ? 0 : 1.3, ease: SILK }}
+      >
         <g fill="none" stroke="currentColor" strokeWidth="0.007">
-          {spokes.map((a, i) => (
-            <motion.line
-              key={i}
-              x1={0}
-              y1={0}
-              x2={r5(Math.cos(a))}
-              y2={r5(Math.sin(a))}
-              initial={reduced ? false : { pathLength: 0, opacity: 0 }}
-              animate={on ? { pathLength: 1, opacity: 0.85 } : undefined}
-              transition={{ duration: 1.1, delay: i * 0.022, ease: CURTAIN }}
-            />
-          ))}
-          {rings.map((r, i) => (
-            <motion.circle
-              key={r}
-              cx={0}
-              cy={0}
-              r={r}
-              initial={reduced ? false : { pathLength: 0, opacity: 0 }}
-              animate={on ? { pathLength: 1, opacity: 0.7 } : undefined}
-              transition={{ duration: 1.4, delay: 0.35 + i * 0.09, ease: CURTAIN }}
-            />
-          ))}
           {spokes.map((a, i) =>
-            rings.slice(0, 4).map((r, j) => (
-              <motion.circle
-                key={`${i}-${j}`}
-                cx={r5(Math.cos(a) * r)}
-                cy={r5(Math.sin(a) * r)}
-                r={0.012}
-                fill="currentColor"
-                stroke="none"
-                initial={reduced ? false : { scale: 0, opacity: 0 }}
-                animate={on ? { scale: 1, opacity: 0.55 } : undefined}
-                transition={{ duration: 0.5, delay: 0.7 + (i * 0.012 + j * 0.05), ease: CURTAIN }}
+            draw ? (
+              <motion.line
+                key={i}
+                x1={0}
+                y1={0}
+                x2={r5(Math.cos(a))}
+                y2={r5(Math.sin(a))}
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={inView ? { pathLength: 1, opacity: 0.85 } : undefined}
+                transition={{ duration: 1.1, delay: i * 0.022, ease: CURTAIN }}
               />
-            )),
+            ) : (
+              <line key={i} x1={0} y1={0} x2={r5(Math.cos(a))} y2={r5(Math.sin(a))} opacity={0.85} />
+            ),
+          )}
+          {rings.map((r, i) =>
+            draw ? (
+              <motion.circle
+                key={r}
+                cx={0}
+                cy={0}
+                r={r}
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={inView ? { pathLength: 1, opacity: 0.7 } : undefined}
+                transition={{ duration: 1.4, delay: 0.35 + i * 0.09, ease: CURTAIN }}
+              />
+            ) : (
+              <circle key={r} cx={0} cy={0} r={r} opacity={0.7} />
+            ),
+          )}
+          {draw ? (
+            <motion.g
+              fill="currentColor"
+              stroke="none"
+              initial={{ opacity: 0 }}
+              animate={inView ? { opacity: 0.55 } : undefined}
+              transition={{ duration: 0.9, delay: 0.75, ease: CURTAIN }}
+            >
+              {dots}
+            </motion.g>
+          ) : (
+            <g fill="currentColor" stroke="none" opacity={0.55}>
+              {dots}
+            </g>
           )}
         </g>
-      </svg>
+      </motion.svg>
     </div>
   );
 }
