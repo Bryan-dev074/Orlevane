@@ -21,7 +21,9 @@ import { useEffect, useRef, useState } from 'react';
 
 type Mode = 'default' | 'link' | 'view' | 'drag' | 'hidden';
 
-const RING: Record<Mode, number> = { default: 13, link: 38, view: 76, drag: 76, hidden: 0 };
+/* El anillo de enlace se queda chico a propósito: a 38 px tapaba etiquetas de
+   dos letras como «PT». */
+const RING: Record<Mode, number> = { default: 13, link: 28, view: 74, drag: 74, hidden: 0 };
 
 export default function Cursor() {
   const ring = useRef<HTMLDivElement>(null);
@@ -103,16 +105,30 @@ export default function Cursor() {
   const size = RING[mode];
   const filled = mode === 'view' || mode === 'drag';
 
+  /* Sin envoltorio posicionado a propósito. Un contenedor `fixed` con z-index
+     abre un contexto de apilado, y ahí `mix-blend-mode` se mezcla contra el
+     fondo de ese contenedor —que es transparente— en vez de contra la página:
+     el anillo salía marfil sobre marfil y desaparecía. Sueltos en la raíz, la
+     diferencia sí invierte lo que hay debajo. */
   return (
-    <div aria-hidden className="no-print pointer-events-none fixed inset-0 z-[190] hidden [@media(pointer:fine)]:block">
+    <>
+      {/* Marfil por diferencia, no dorado: sobre marfil el dorado casi no se ve,
+          mientras que la diferencia lo vuelve oscuro sobre claro y claro sobre
+          tinta. Además deja leer lo que queda debajo en lugar de taparlo. */}
       <div
         ref={ring}
-        className="fixed left-0 top-0 grid place-items-center rounded-full transition-[width,height,background-color,border-color,opacity] duration-[420ms] ease-silk"
+        aria-hidden
+        className="no-print pointer-events-none grid place-items-center transition-[width,height,background-color,border-color,opacity] duration-[420ms] ease-silk"
         style={{
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          zIndex: 190,
           width: size,
           height: size,
+          borderRadius: '9999px',
           opacity: mode === 'hidden' ? 0 : 1,
-          border: filled ? '1px solid transparent' : '1px solid var(--color-gilt)',
+          border: filled ? '1px solid transparent' : '1px solid var(--color-paper)',
           background: filled ? 'var(--color-gilt)' : 'transparent',
           mixBlendMode: filled ? 'normal' : 'difference',
         }}
@@ -126,14 +142,21 @@ export default function Cursor() {
 
       <div
         ref={dot}
-        className="fixed left-0 top-0 rounded-full bg-gilt transition-opacity duration-300"
+        aria-hidden
+        className="no-print pointer-events-none transition-opacity duration-300"
         style={{
-          width: 4,
-          height: 4,
+          position: 'fixed',
+          left: 0,
+          top: 0,
+          zIndex: 191,
+          width: 5,
+          height: 5,
+          borderRadius: '9999px',
+          background: 'var(--color-paper)',
           opacity: mode === 'default' ? 1 : 0,
           mixBlendMode: 'difference',
         }}
       />
-    </div>
+    </>
   );
 }

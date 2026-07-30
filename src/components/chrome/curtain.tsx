@@ -1,66 +1,73 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 
 import { usePrefs } from '@/lib/prefs';
-import { useIntro, INTRO_KEY } from '@/lib/intro';
+import { useIntro } from '@/lib/intro';
 import { CURTAIN, SILK } from '@/lib/motion';
 import { setScrollLock } from './smooth-scroll';
 
 /**
  * Cortina de entrada.
  *
- * La marca se dibuja letra por letra mientras carga lo que el primer viewport
- * necesita de verdad —las tipografías y los tres negativos de vitrina— y el
- * filete dorado marca ese avance real, no un porcentaje inventado.
+ * Dos paños de tela que se abren, no un rectángulo que se va. La diferencia
+ * está en tres cosas: la textura de pliegues, la sombra en el canto interno
+ * —que es donde la tela se junta y se oscurece— y que los paños no salen a la
+ * vez: el derecho sale un pelo después, como pasa cuando dos cuerdas no tiran
+ * exactamente igual.
  *
- * Tres salvaguardas, porque una cortina mal hecha es peor que ninguna:
- *  · se muestra una sola vez por sesión;
- *  · sale igual pasado el tope de tiempo, aunque algo no haya cargado;
- *  · con movimiento reducido no hay cortina, sólo un fundido corto.
+ * La secuencia tiene compases, no un fundido:
+ *   0,00  tinta, nada
+ *   0,30  una línea de luz asoma por la juntura
+ *   0,55  el sello se escribe letra por letra
+ *   1,10  la leyenda entra y el filete marca la carga real
+ *   2,20  compás
+ *   —     los paños se abren en 1,4 s
+ *
+ * Se muestra en cada recarga. Se puede saltar con un clic o con Escape, y con
+ * movimiento reducido no aparece.
  */
 
-const HERO_SHOTS = ['/media/h/aurore.webp', '/media/h/vinci.webp', '/media/h/nanduti-bag.webp'];
-/* El mínimo no es estético: es el tiempo que tarda el sello en terminar de
-   escribirse (0,05 + 7×0,04 + 0,6 ≈ 0,93 s). Con menos, la cortina se abre
-   sobre una marca a medio dibujar, que es peor que no tener cortina. */
-const MIN_MS = 1150;
-const MAX_MS = 2600; // tope duro: la tienda nunca queda rehén de una imagen lenta
+/** Lo que tarda la secuencia en contarse entera. */
+const MIN_MS = 2200;
+/** Tope duro: la tienda nunca queda rehén de una imagen lenta. */
+const MAX_MS = 4200;
 
 const WORDMARK = 'ORLÉVANE'.split('');
+
+type Phase = 'closed' | 'open' | 'gone';
 
 export default function Curtain() {
   const { t } = usePrefs();
   const { finish } = useIntro();
   const reduced = useReducedMotion();
 
-  // Arranca visible y ya renderizada en el servidor: si esperara a la
+  // Arranca cerrada y ya renderizada en el servidor: si esperara a la
   // hidratación, el visitante vería la portada un instante antes de la cortina.
-  // A quien no le toca cortina se la esconde por CSS antes de pintar, con el
-  // atributo que deja el guion en línea del layout.
-  const [show, setShow] = useState(true);
+  const [phase, setPhase] = useState<Phase>('closed');
   const [progress, setProgress] = useState(0);
-  const [lifting, setLifting] = useState(false);
+  const [hint, setHint] = useState(false);
   const settled = useRef(false);
   const locked = useRef(false);
 
-  const release = () => {
+  const release = useCallback(() => {
     if (!locked.current) return;
     locked.current = false;
     setScrollLock(false);
-  };
+  }, []);
+
+  const open = useCallback(() => {
+    if (settled.current) return;
+    settled.current = true;
+    setProgress(1);
+    setPhase('open');
+  }, []);
 
   useEffect(() => {
-    const skip = document.documentElement.dataset.intro === 'skip';
-    if (skip || reduced) {
-      setShow(false);
+    if (document.documentElement.dataset.intro === 'skip' || reduced) {
+      setPhase('gone');
       finish();
-      try {
-        sessionStorage.setItem(INTRO_KEY, '1');
-      } catch {
-        /* modo privado */
-      }
       return;
     }
 
@@ -68,18 +75,16 @@ export default function Curtain() {
     setScrollLock(true);
     const started = performance.now();
 
-    // Cada pieza que termina suma su parte al filete.
+    /* Se espera a la tipografía y al `load` de la página, nunca a los archivos
+       de vitrina a mano: pedirlos acá bajaba el negativo crudo de 2000 px y
+       después next/image bajaba el mismo ya optimizado. Eran medio mega tirado
+       a la basura. La primera fotografía ya viaja con prioridad por su cuenta. */
     const jobs: Promise<unknown>[] = [
       document.fonts?.ready ?? Promise.resolve(),
-      ...HERO_SHOTS.map(
-        (src) =>
-          new Promise<void>((resolve) => {
-            const img = new Image();
-            img.onload = () => resolve();
-            img.onerror = () => resolve();
-            img.src = src;
-          }),
-      ),
+      new Promise<void>((resolve) => {
+        if (document.readyState === 'complete') return resolve();
+        window.addEventListener('load', () => resolve(), { once: true });
+      }),
     ];
 
     let landed = 0;
@@ -90,102 +95,131 @@ export default function Curtain() {
       });
     });
 
-    const close = () => {
-      if (settled.current) return;
-      settled.current = true;
-      setProgress(1);
+    const settle = () => {
       const waited = performance.now() - started;
-      window.setTimeout(() => setLifting(true), Math.max(0, MIN_MS - waited));
+      window.setTimeout(open, Math.max(0, MIN_MS - waited));
     };
 
-    void Promise.all(jobs).then(close);
-    const cap = window.setTimeout(close, MAX_MS);
+    void Promise.all(jobs).then(settle);
+    const cap = window.setTimeout(open, MAX_MS);
+    // La salida sólo se ofrece a quien esperó; en una visita normal no se ve.
+    const nudge = window.setTimeout(() => setHint(true), 2600);
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') open();
+    };
+    window.addEventListener('keydown', onKey);
 
     return () => {
       window.clearTimeout(cap);
+      window.clearTimeout(nudge);
+      window.removeEventListener('keydown', onKey);
       release();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [reduced, finish]);
+  }, [reduced, finish, open, release]);
 
-  // El telón terminó de abrirse: se libera el scroll y arranca el hero.
-  const onLifted = () => {
-    release();
-    try {
-      sessionStorage.setItem(INTRO_KEY, '1');
-    } catch {
-      /* modo privado */
-    }
-    setShow(false);
-    finish();
-  };
+  if (phase === 'gone') return null;
+
+  const opening = phase === 'open';
 
   return (
-    <AnimatePresence onExitComplete={onLifted}>
-      {show && !lifting && (
-        <motion.div
-          key="curtain"
-          className="curtain fixed inset-0 z-[200] grid place-items-center"
-          exit={{ opacity: 1 }}
-          /* Mantiene el nodo vivo hasta que las dos mitades terminaron de salir. */
-          transition={{ duration: 1.0 }}
-          aria-hidden
-        >
-          {/* Dos mitades que se apartan. */}
-          <motion.div
-            className="on-ink grain absolute inset-x-0 top-0 h-1/2"
-            exit={{ y: '-100%' }}
-            transition={{ duration: 0.8, ease: CURTAIN, delay: 0.16 }}
-          />
-          <motion.div
-            className="on-ink grain absolute inset-x-0 bottom-0 h-1/2"
-            exit={{ y: '100%' }}
-            transition={{ duration: 0.8, ease: CURTAIN, delay: 0.16 }}
-          />
+    <div
+      className="curtain fixed inset-0 z-[200] cursor-none"
+      onClick={open}
+      role="presentation"
+      aria-hidden
+    >
+      {/* Paño izquierdo */}
+      <motion.div
+        className="drape drape-l absolute inset-y-0 left-0 w-1/2 will-change-transform"
+        initial={{ x: 0 }}
+        animate={{ x: opening ? '-100%' : 0 }}
+        transition={{ duration: 1.4, ease: CURTAIN }}
+        onAnimationComplete={() => {
+          if (!opening) return;
+          setPhase('gone');
+          release();
+          finish();
+        }}
+      />
 
-          {/* Marca y avance, por encima de la juntura. */}
+      {/* Paño derecho: sale un poco después, para que no parezca una puerta. */}
+      <motion.div
+        className="drape drape-r absolute inset-y-0 right-0 w-1/2 will-change-transform"
+        initial={{ x: 0 }}
+        animate={{ x: opening ? '100%' : 0 }}
+        transition={{ duration: 1.4, delay: opening ? 0.09 : 0, ease: CURTAIN }}
+      />
+
+      {/* Luz por la juntura: es lo que dice que hay algo detrás de la tela. */}
+      <motion.div
+        className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 bg-gilt/70 shadow-[0_0_22px_rgba(184,154,91,0.32)]"
+        initial={{ scaleY: 0, opacity: 0 }}
+        animate={
+          opening
+            ? { scaleY: 1, opacity: [0.45, 1, 0], transition: { duration: 0.9, ease: SILK } }
+            : { scaleY: 1, opacity: 0.45, transition: { duration: 1.1, delay: 0.3, ease: CURTAIN } }
+        }
+      />
+
+      {/* Sello y avance */}
+      <motion.div
+        className="absolute inset-0 grid place-items-center"
+        animate={{ opacity: opening ? 0 : 1, scale: opening ? 1.05 : 1 }}
+        transition={{ duration: 0.45, ease: SILK }}
+      >
+        <div className="flex flex-col items-center">
+          {/* leading holgado a propósito: con `leading-none` la máscara de cada
+              letra le corta el acento a la É. */}
+          <h1 className="flex font-display text-[clamp(1.6rem,5.2vw,3.2rem)] leading-[1.2] tracking-[0.3em] text-paper">
+            {WORDMARK.map((ch, n) => (
+              <span key={n} className="block overflow-hidden">
+                <motion.span
+                  className="block"
+                  initial={{ y: '110%' }}
+                  animate={{ y: '0%' }}
+                  transition={{ duration: 0.78, delay: 0.55 + n * 0.06, ease: CURTAIN }}
+                >
+                  {ch}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
+
           <motion.div
-            className="relative flex flex-col items-center"
-            exit={{ opacity: 0, scale: 1.04 }}
-            transition={{ duration: 0.3, ease: SILK }}
+            className="mt-8 h-px w-[min(18rem,52vw)] bg-paper/15"
+            initial={{ opacity: 0, scaleX: 0.4 }}
+            animate={{ opacity: 1, scaleX: 1 }}
+            transition={{ duration: 0.9, delay: 1.1, ease: CURTAIN }}
           >
-            {/* leading holgado a propósito: con `leading-none` la máscara de cada
-                letra le corta el acento a la É. */}
-            <h1 className="flex font-display text-[clamp(1.6rem,5.2vw,3.2rem)] leading-[1.2] tracking-[0.3em] text-paper">
-              {WORDMARK.map((ch, n) => (
-                <span key={n} className="block overflow-hidden">
-                  <motion.span
-                    className="block"
-                    initial={{ y: '110%' }}
-                    animate={{ y: '0%' }}
-                    transition={{ duration: 0.6, delay: 0.05 + n * 0.04, ease: CURTAIN }}
-                  >
-                    {ch}
-                  </motion.span>
-                </span>
-              ))}
-            </h1>
-
-            <div className="mt-7 h-px w-[min(18rem,52vw)] bg-paper/18">
-              <motion.div
-                className="h-px origin-left bg-gilt"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: Math.max(0.06, progress) }}
-                transition={{ duration: 0.5, ease: SILK }}
-              />
-            </div>
-
-            <motion.p
-              className="label mt-5 text-paper/35"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.5, ease: SILK }}
-            >
-              {t('intro.abriendo')}
-            </motion.p>
+            <motion.div
+              className="h-px origin-left bg-gilt"
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: Math.max(0.04, progress) }}
+              transition={{ duration: 0.6, ease: SILK }}
+            />
           </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+
+          <motion.p
+            className="label mt-5 text-paper/35"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.25, ease: SILK }}
+          >
+            {t('intro.abriendo')}
+          </motion.p>
+        </div>
+      </motion.div>
+
+      {/* Salida para el impaciente */}
+      <motion.p
+        className="label absolute inset-x-0 bottom-10 text-center text-paper/22"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: hint && !opening ? 1 : 0 }}
+        transition={{ duration: 0.8, ease: SILK }}
+      >
+        {t('intro.saltar')}
+      </motion.p>
+    </div>
   );
 }

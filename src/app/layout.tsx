@@ -22,19 +22,26 @@ import Footer from '@/components/chrome/footer';
 import SkipLink from '@/components/chrome/skip-link';
 import Overlays from '@/components/chrome/overlays';
 
+/**
+ * Sólo los cortes que la página usa de verdad.
+ *
+ * `latin` alcanza: ñ, á, é, í, ó, ú, ç, ã y õ están todos ahí; `latin-ext` sólo
+ * agrega alfabetos que esta tienda no escribe y duplicaba los archivos.
+ * Del display se usa el 400 normal y el 400 itálico; del aparato, 400 y 500.
+ */
 const bodoni = Bodoni_Moda({
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   variable: '--font-bodoni',
   display: 'swap',
-  weight: ['400', '500', '600'],
+  weight: ['400'],
   style: ['normal', 'italic'],
 });
 
 const jost = Jost({
-  subsets: ['latin', 'latin-ext'],
+  subsets: ['latin'],
   variable: '--font-jost',
   display: 'swap',
-  weight: ['300', '400', '500', '600'],
+  weight: ['400', '500'],
 });
 
 const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://orlevane.vercel.app';
@@ -97,11 +104,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       suppressHydrationWarning
     >
       <body className="antialiased">
-        {/* Decide antes de pintar si a esta visita le toca cortina. Sin esto,
-            quien ya la vio en esta sesión la ve parpadear. */}
+        {/* La cortina sale en cada recarga; lo único que se decide antes de
+            pintar es saltarla cuando el visitante pide movimiento reducido. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{if(sessionStorage.getItem('orlevane.intro')||matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.dataset.intro='skip'}}catch(e){}`,
+            __html: `try{if(matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.dataset.intro='skip'}}catch(e){}`,
           }}
         />
         <PrefsProvider initialLocale={locale} initialCurrency={currency}>

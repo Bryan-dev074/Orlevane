@@ -16,6 +16,7 @@ const es = {
   'brand.tagline': 'Elegancia en cada paso.',
   'brand.since': 'Asunción · desde 1998',
   'intro.abriendo': 'Abriendo la vitrina',
+  'intro.saltar': 'Tocá para entrar',
   'brand.maison': 'Maison ORLÉVANE',
 
   // ── Navegación ─────────────────────────────────────────────────────────
@@ -480,6 +481,7 @@ const pt: Record<DictKey, string> = {
   'brand.tagline': 'Elegância em cada passo.',
   'brand.since': 'Assunção · desde 1998',
   'intro.abriendo': 'Abrindo a vitrine',
+  'intro.saltar': 'Toque para entrar',
   'brand.maison': 'Maison ORLÉVANE',
 
   'nav.mujer': 'Feminino',
