@@ -13,7 +13,10 @@ import {
   parseLocale,
 } from '@/lib/prefs-shared';
 
+import { IntroProvider } from '@/lib/intro';
 import SmoothScroll from '@/components/chrome/smooth-scroll';
+import Curtain from '@/components/chrome/curtain';
+import Cursor from '@/components/chrome/cursor';
 import Header from '@/components/chrome/header';
 import Footer from '@/components/chrome/footer';
 import SkipLink from '@/components/chrome/skip-link';
@@ -86,15 +89,32 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     : currencyForLocale(locale);
 
   return (
-    <html lang={LOCALE_META[locale].htmlLang} className={`${bodoni.variable} ${jost.variable}`}>
+    <html
+      lang={LOCALE_META[locale].htmlLang}
+      className={`${bodoni.variable} ${jost.variable}`}
+      /* El guion de abajo marca `data-intro` antes de hidratar; el servidor no
+         puede saberlo, así que React tiene que dejar pasar esa diferencia. */
+      suppressHydrationWarning
+    >
       <body className="antialiased">
+        {/* Decide antes de pintar si a esta visita le toca cortina. Sin esto,
+            quien ya la vio en esta sesión la ve parpadear. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem('orlevane.intro')||matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.dataset.intro='skip'}}catch(e){}`,
+          }}
+        />
         <PrefsProvider initialLocale={locale} initialCurrency={currency}>
-          <SmoothScroll />
-          <SkipLink />
-          <Header />
-          <main id="contenido">{children}</main>
-          <Footer />
-          <Overlays />
+          <IntroProvider>
+            <SmoothScroll />
+            <Curtain />
+            <Cursor />
+            <SkipLink />
+            <Header />
+            <main id="contenido">{children}</main>
+            <Footer />
+            <Overlays />
+          </IntroProvider>
         </PrefsProvider>
       </body>
     </html>

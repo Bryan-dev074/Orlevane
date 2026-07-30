@@ -114,6 +114,8 @@ export default function ProductCard({
         <Link
           href={href}
           aria-label={`${product.name} — ${product.kind[locale]}`}
+          data-cursor="view"
+          data-cursor-label={t('u.ver')}
           className="relative block aspect-4/5 overflow-hidden bg-paper-2"
         >
           {/* Puntero fino: dos capas cruzadas. */}

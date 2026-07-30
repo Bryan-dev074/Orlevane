@@ -15,6 +15,7 @@ const es = {
   // ── Marca ──────────────────────────────────────────────────────────────
   'brand.tagline': 'Elegancia en cada paso.',
   'brand.since': 'Asunción · desde 1998',
+  'intro.abriendo': 'Abriendo la vitrina',
   'brand.maison': 'Maison ORLÉVANE',
 
   // ── Navegación ─────────────────────────────────────────────────────────
@@ -48,6 +49,7 @@ const es = {
   'home.hero.pieza': 'Pieza',
   'home.hero.de': 'de',
   'home.hero.desliza': 'Desplazá',
+  'home.hero.arrastrar': 'Arrastrar',
 
   'home.marquee': 'Hecho a horma · Cuero del Chaco · Cosido a mano · Serie numerada',
 
@@ -477,6 +479,7 @@ export type DictKey = keyof typeof es;
 const pt: Record<DictKey, string> = {
   'brand.tagline': 'Elegância em cada passo.',
   'brand.since': 'Assunção · desde 1998',
+  'intro.abriendo': 'Abrindo a vitrine',
   'brand.maison': 'Maison ORLÉVANE',
 
   'nav.mujer': 'Feminino',
@@ -507,6 +510,7 @@ const pt: Record<DictKey, string> = {
   'home.hero.pieza': 'Peça',
   'home.hero.de': 'de',
   'home.hero.desliza': 'Role',
+  'home.hero.arrastrar': 'Arrastar',
 
   'home.marquee': 'Feito na fôrma · Couro do Chaco · Costurado à mão · Série numerada',
 
