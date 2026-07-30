@@ -202,6 +202,36 @@ export default function Hero() {
           />
           {/* Sostiene el contraste de la navegación cuando la foto queda arriba. */}
           <div aria-hidden className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/70 to-transparent lg:hidden" />
+
+          {/* Flecha de deslizar, sólo en el apilado de teléfono: en escritorio
+              ese aviso lo da el cursor. Late constante hacia la derecha para
+              decir «hay más piezas», y tocada también pasa a la siguiente. */}
+          <motion.button
+            type="button"
+            onClick={() => go(i + 1)}
+            aria-label={t('u.siguiente')}
+            className="absolute right-1.5 top-1/2 z-10 -translate-y-1/2 p-3 text-paper/90 lg:hidden"
+            initial={{ opacity: 0 }}
+            animate={show ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: reduced ? 0 : 0.7, delay: reduced ? 0 : 1.5, ease: SILK }}
+          >
+            <motion.span
+              className="block drop-shadow-[0_1px_6px_rgba(23,20,17,0.6)]"
+              animate={reduced ? undefined : { x: [0, 5, 0], opacity: [0.9, 1, 0.9] }}
+              transition={{ duration: 1.9, repeat: Infinity, ease: CURTAIN }}
+            >
+              <svg viewBox="0 0 10 18" className="h-[1.2rem] w-auto" aria-hidden>
+                <path
+                  d="M1.5 1.5 8.5 9l-7 7.5"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </motion.span>
+          </motion.button>
         </motion.div>
 
         {/* Ficha */}
