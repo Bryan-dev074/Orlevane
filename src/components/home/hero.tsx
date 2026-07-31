@@ -64,6 +64,12 @@ export default function Hero() {
   const shotY = useTransform(sy, [-0.5, 0.5], [-10, 10]);
   const cardX = useTransform(sx, [-0.5, 0.5], [5, -5]);
 
+  /* La foto acompaña al dedo mientras se desliza (una fracción del arrastre,
+     con tope) y vuelve sola al soltar. Sin esto el gesto cambia la pieza pero
+     no se siente: la vitrina parece ignorar la mano. */
+  const dragRaw = useMotionValue(0);
+  const dragX = useSpring(dragRaw, { stiffness: 320, damping: 32 });
+
   const go = useCallback((n: number) => setI(((n % VITRINA.length) + VITRINA.length) % VITRINA.length), []);
 
   useEffect(() => {
@@ -137,18 +143,37 @@ export default function Hero() {
         >
           <motion.div
             ref={photo}
-            style={depth ? { x: shotX, y: shotY } : undefined}
+            style={depth ? { x: shotX, y: shotY } : { x: dragX }}
             data-cursor="drag"
             data-cursor-label={t('home.hero.arrastrar')}
             onPointerDown={(e) => {
               dragFrom.current = e.clientX;
+              // Retiene el gesto aunque el dedo salga del recuadro.
+              try {
+                e.currentTarget.setPointerCapture(e.pointerId);
+              } catch {
+                /* hay navegadores que lo niegan; el gesto igual funciona */
+              }
+            }}
+            onPointerMove={(e) => {
+              if (dragFrom.current == null) return;
+              const dx = e.clientX - dragFrom.current;
+              dragRaw.set(Math.max(-56, Math.min(56, dx * 0.35)));
             }}
             onPointerUp={(e) => {
               const from = dragFrom.current;
               dragFrom.current = null;
+              dragRaw.set(0);
               if (from == null) return;
               const dx = e.clientX - from;
               if (Math.abs(dx) > DRAG_MIN) go(i + (dx < 0 ? 1 : -1));
+            }}
+            /* Si el navegador se queda con el gesto (scroll vertical a medio
+               camino), llega pointercancel y no pointerup: sin esto, el próximo
+               deslizamiento arrancaría con un origen viejo. */
+            onPointerCancel={() => {
+              dragFrom.current = null;
+              dragRaw.set(0);
             }}
             className="absolute -inset-4 touch-pan-y select-none"
           >
@@ -195,13 +220,51 @@ export default function Hero() {
             />
           )}
 
-          <motion.div aria-hidden style={{ opacity: veil }} className="absolute inset-0 bg-ink" />
+          {/* Los velos van SIN eventos de puntero: están por encima de la capa
+              de arrastre y, sin esto, se tragan el dedo y el deslizar no llega
+              nunca a la foto. */}
+          <motion.div aria-hidden style={{ opacity: veil }} className="pointer-events-none absolute inset-0 bg-ink" />
           <div
             aria-hidden
-            className="absolute inset-0 bg-gradient-to-t from-ink via-ink/12 to-transparent lg:bg-gradient-to-r lg:from-ink lg:via-transparent lg:to-transparent"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink via-ink/12 to-transparent lg:bg-gradient-to-r lg:from-ink lg:via-transparent lg:to-transparent"
           />
           {/* Sostiene el contraste de la navegación cuando la foto queda arriba. */}
-          <div aria-hidden className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/70 to-transparent lg:hidden" />
+          <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink/70 to-transparent lg:hidden" />
+
+          {/* Flecha de volver: aparece recién cuando ya se avanzó, y también
+              se puede volver deslizando hacia la derecha. */}
+          <AnimatePresence>
+            {show && i > 0 && (
+              <motion.button
+                key="atras"
+                type="button"
+                onClick={() => go(i - 1)}
+                aria-label={t('u.anterior')}
+                className="absolute left-1.5 top-1/2 z-10 -translate-y-1/2 p-3 text-paper/90 lg:hidden"
+                initial={{ opacity: 0, x: 8 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 8 }}
+                transition={{ duration: 0.45, ease: SILK }}
+              >
+                <motion.span
+                  className="block drop-shadow-[0_1px_6px_rgba(23,20,17,0.6)]"
+                  animate={reduced ? undefined : { x: [0, -5, 0], opacity: [0.9, 1, 0.9] }}
+                  transition={{ duration: 1.9, repeat: Infinity, ease: CURTAIN }}
+                >
+                  <svg viewBox="0 0 10 18" className="h-[1.2rem] w-auto" aria-hidden>
+                    <path
+                      d="M8.5 1.5 1.5 9l7 7.5"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.4"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </motion.span>
+              </motion.button>
+            )}
+          </AnimatePresence>
 
           {/* Flecha de deslizar, sólo en el apilado de teléfono: en escritorio
               ese aviso lo da el cursor. Late constante hacia la derecha para
